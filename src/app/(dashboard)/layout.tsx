@@ -12,8 +12,8 @@ const DashboardLayout = ({ children }:{
                <Sidebar  />
 
             </div>
-            <main className="md:pl-72 pb-10">
-                <div className="flex justify-end">
+            <main className="md:pl-72 pb-10 ">
+                <div className=" w-full items-center">
                 <Navbar />
                 </div>
            

@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 import { User } from 'lucide-react'
 import { link } from 'fs';
+import SearchBar from './ui/search';
 
 const links = [
     { href: '/', label: 'Account settings' },
@@ -18,9 +19,12 @@ const links = [
 
 const Navbar = () => {
     return (
-        <div className="flex items-center p-4">
+        <div className="flex flex-row   justify-between items-center p-4">
+            <div>
+                <SearchBar/>
+            </div>
 
-            <Menu as="div" className="relative inline-block">
+            <Menu as="div" className="relative inline-block ">
                <div>
                <Menu.Button className="inline-flex w-full justify-center rounded-md   px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ">
                     <div className="p-4 md:mr-3 rounded-full bg-green-300 hover:bg-gray-300 hover:scale-125 duration-150 hover:cursor-pointer">

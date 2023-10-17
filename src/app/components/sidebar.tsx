@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Montserrat } from "next/font/google"
-import { ScanSearch, Sprout, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon, ChevronDown, ListChecks, ScrollText, LogOut } from "lucide-react";
+import { ScanSearch, Sprout, LayoutDashboard, MessageSquare, Database, Settings, VideoIcon, ChevronDown, ListChecks, ScrollText, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation"
 
 
@@ -29,13 +29,13 @@ const routes = [
     label: 'Diary',
     icon: ScrollText,
     color: "text-pink-700",
-    href: '/image',
+    href: '/diary',
   },
   {
     label: 'Logout',
     icon: LogOut,
     color: "text-orange-700",
-    href: '/video',
+    href: '/home',
   },
   // {
   //   label: 'Music Generation',
@@ -69,9 +69,9 @@ const routesPlants = [
     color: "text-red-500"
   },
   {
-    label: 'Dashboard',
-    icon: LayoutDashboard,
-    href: '/',
+    label: 'Your Data',
+    icon: Database,
+    href: '/data',
     color: "text-violet-500",
   },
 ]
