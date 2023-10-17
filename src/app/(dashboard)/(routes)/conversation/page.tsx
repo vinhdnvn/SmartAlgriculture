@@ -1,7 +1,7 @@
 'use client'
 
 import * as z from "zod";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -49,18 +49,20 @@ const Conversation = () => {
     }
 
     return (
-        <div className="flex flex-col justify-center items-center">
-            <div className="text-4xl font-bold">
+        <div className="flex flex-col justify-start items-center md:h-[1000px] w-full bg-[#efede6] rounded-2xl">
+            <div className="text-4xl font-bold md:mt-9">
                 Welcome back, User !
             </div>
             {/* chat input  */}
-            <div className="px-4 lg:px-8 mt-14 w-[70%] ">
+            <div className="px-4 lg:px-8 mt-7 w-[70%] ">
                 <div>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}
                             className="
                   rounded-2xl 
                   border 
+                  bg-white
+                  shadow-xl
                   w-full 
                   p-4 
                   px-3 
@@ -87,8 +89,8 @@ const Conversation = () => {
                                 )}
                             />
 
-                            <Button className="col-span-12 lg:col-span-2 w-full p-3 bg-orange-400 rounded-2xl" type="submit" disabled={isLoading} size="icon">
-                                Start a chat !
+                            <Button className="flex gap-2 items-center col-span-12 lg:col-span-2 w-full p-3 bg-orange-400 rounded-2xl hover:scale-110 duration-150 transition hover:cursor-pointer" type="submit" disabled={isLoading} size="icon">
+                                Start a chat <Send size={18}/>
                             </Button>
                         </form>
                     </Form>
@@ -101,18 +103,31 @@ const Conversation = () => {
                          <Loader />
                        </div>
                     )}
-                     {messages.map((message) => (
+                     {messageDemo.map((message) => (
               <div 
                 key={message.content} 
                 className={cn(
-                  "p-8 w-full flex items-start gap-x-8 rounded-lg",
-                  message.role === "user" ? "bg-white border border-black/10" : "bg-muted",
+                  "p-8 w-full flex flex-row items-center  gap-x-8 rounded-lg ",
+                  message.role === "user" ? "  justify-end" : "bg-white shadow-xl",
                 )}
               >
-                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-                <p className="text-sm">
+                {message.role === "user" ? 
+                ( <div className="flex flex-row items-center gap-6">
+              <p className="text-lg text-gray-600 font-semibold">
                   {message.content}
                 </p>
+                    <UserAvatar /> 
+                </div>
+                ): 
+                ( <div className="flex flex-row items-center gap-6">
+                    <BotAvatar />
+                     <p className="text-lg text-gray-600 font-semibold">
+                  {message.content}
+                </p>
+                </div>
+                ) }
+                
+               
               </div>
             ))}
                 </div>
@@ -123,3 +138,29 @@ const Conversation = () => {
 }
 
 export default Conversation;
+
+
+const messageDemo = [
+    {
+        "content": "Hello, how are you?",
+        "role": "user"
+    },
+    {
+        "content": "I am doing great, What can i help you?",
+        "role": "bot"
+
+    },
+    {
+        "content": "So i have problem with my blossom ",
+        "role": "user"
+    },{
+        "content":"What is the problem?",
+        "role": "bot"
+
+    },
+    {
+        "content":"My blossom's leaf have a lot of brown spot",
+        "role": "user"
+
+    }
+]
