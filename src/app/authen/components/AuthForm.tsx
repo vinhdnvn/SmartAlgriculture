@@ -14,6 +14,7 @@ import {toast} from 'react-hot-toast';
 
 
 
+
 type Variant = 'LOGIN' | 'REGISTER'
 
 
@@ -60,15 +61,40 @@ const AuthForm = () => {
     setIsLoading(true);
     if(variant==='REGISTER'){
       axios.post('/api/auth/register',data)
-      .then((callback)=>{
-        if(callback?.data?.error){
-          toast.error(callback.data.error);
+      .then(()=> signIn('credentials',{
+        ...data,
+        redirect: false
+      }))
+      .then((callback) => {
+        if (callback?.error) {
+          toast.error('Invalid credentials!');
         }
-        if(callback?.data?.ok){
-          toast.success('Register success!');
-          setVariant('LOGIN');
+
+        if (callback?.ok) {
+          router.push('/conversations')
         }
-      }).finally(()=>setIsLoading(false))
+      })
+      .catch(() => toast.error('Something went wrong!'))
+      .finally(() => setIsLoading(false))
+
+      
+    }
+
+    if(variant ==='LOGIN'){
+       signIn('credentials',{
+        ...data,
+        redirect: false
+       })
+       .then((callback)=>{
+        if (callback?.error) {
+          toast.error('Invalid credentials!');
+        }
+        if(callback?.ok && !callback?.error){
+          toast.success('Login success!');
+          router.push('/dashboard')
+        }
+       })
+       .finally(()=>setIsLoading(false))
     }
 
   }

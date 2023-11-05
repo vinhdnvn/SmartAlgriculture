@@ -1,7 +1,7 @@
 'use client'
 
 import * as z from "zod";
-import { MessageSquare, Send } from "lucide-react";
+import { MessageSquare, Send, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -16,12 +16,23 @@ import { useProModal } from "@/hooks/use-pro-modal";
 import { cn } from "../../../libs/utils";
 import { UserAvatar } from "@/app/components/user-avatar";
 import { BotAvatar } from "@/app/components/bot-avatar";
+import  {ChatCompletionRequestMessage, OpenAIApi}  from "openai";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import getCurrentUser from "@/app/actions/getCurrentUser";
+
+
+
+
+
+
 
 // vissualize the messages array data for me, data take from openai
-interface ChatCompletionRequestMessage {
-    content: string;
-    role: "user" | "bot";
-}
+// interface ChatCompletionRequestMessage {
+//     content: string;
+//     role: "user" | "bot";
+// }
 
 
 
@@ -29,7 +40,13 @@ interface ChatCompletionRequestMessage {
 
 const Conversation = () => {
     const router = useRouter();
-    const proModel = useProModal();
+    const {data:session} = useSession();
+
+
+
+
+
+   
  
 
     // const [messages, setMessages] = useState<[]>([]);
@@ -45,94 +62,98 @@ const Conversation = () => {
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        // console.log(values);
+        try {
+            const userMessage: ChatCompletionRequestMessage = { role: "user", content: values.prompt };
+            // const completion = await openai.chat.completions.create({
+            //     messages: [{ role: "system", content: "You are a helpful assistant." }],
+            //     model: "gpt-3.5-turbo",
+            //   });
+            
+            const newMessages = [...messages, userMessage];
+         const response = await axios.post('/api/conversation',{messages: newMessages});
+         setMessages((current)=>[...current, userMessage, response.data]);
+         form.reset();
+        } catch (error:any) {
+            if (error?.response?.status === 403) {
+                toast.error("You are not authorized to perform this action.");
+              } else {
+                toast.error("Something went wrong.");
+              }
+        }
+        finally{
+            router.refresh();
+        }
     }
 
+    if (!session) {
+        router.replace("/authen");
+    };
+
     return (
-        <div className="flex flex-col justify-start items-center md:h-[1000px] w-full bg-[#efede6] rounded-2xl">
+        <div className="flex flex-col justify-start items-center md:h-[1000px] w-full  rounded-2xl">
             <div className="text-4xl font-bold md:mt-9">
-                Welcome back, User !
+                Welcome back, {session?.user?.name} !
             </div>
-            {/* chat input  */}
-            <div className="px-4 lg:px-8 mt-7 w-[70%] ">
+            <div className="mt-6 lg:px-8">
                 <div>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}
-                            className="
-                  rounded-2xl 
-                  border 
-                  bg-white
-                  shadow-xl
-                  w-full 
-                  p-4 
-                  px-3 
-                  md:px-6 
-                  focus-within:shadow-sm
-                  grid
-                  grid-cols-12
-                  gap-2
-                "
-                        >
-                            <FormField
-                                name="prompt"
-                                render={({ field }) => (
-                                    <FormItem className="col-span-12 lg:col-span-10">
-                                        <FormControl className="m-0 p-0">
-                                            <Input
-                                                className="text-lg border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
-                                                disabled={isLoading}
-                                                placeholder="How do I calculate the radius of a circle?"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <Button className="flex gap-2 items-center col-span-12 lg:col-span-2 w-full p-3 bg-orange-400 rounded-2xl hover:scale-110 duration-150 transition hover:cursor-pointer" type="submit" disabled={isLoading} size="icon">
-                                Start a chat <Send size={18}/>
-                            </Button>
-                        </form>
-                    </Form>
-                </div>
-
-                {/* the chat conversation part */}
-                <div className="space-y-4 mt-4">
-                    {isLoading && (
-                         <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
-                         <Loader />
-                       </div>
-                    )}
-                     {messageDemo.map((message) => (
-              <div 
-                key={message.content} 
-                className={cn(
-                  "p-8 w-full flex flex-row items-center  gap-x-8 rounded-lg ",
-                  message.role === "user" ? "  justify-end" : "bg-white shadow-xl",
+                       <form 
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="
+                        rounded-lg 
+                        border
+                        w-full 
+                        p-4 
+                        m 
+                        md:px-6 
+                        focus-within:shadow-sm
+                        flex flex-row
+                        gap-2
+                        "
+                       >
+                         <FormField
+                name="prompt"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormControl className="m-0 p-0">
+                      <Input
+                        className="border-0 text-xl font-medium md:w-[1000px] outline-none focus-visible:ring-0 focus-visible:ring-transparent"
+                        disabled={isLoading} 
+                        placeholder="How do I calculate the radius of a circle?" 
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
                 )}
-              >
-                {message.role === "user" ? 
-                ( <div className="flex flex-row items-center gap-6">
-              <p className="text-lg text-gray-600 font-semibold">
-                  {message.content}
-                </p>
-                    <UserAvatar /> 
+              />
+              <Button  className=" md:w-[200px] bg-black text-white" type="submit" disabled={isLoading} size="icon">Generate</Button>
+
+                       </form>
+                    </Form>
+
                 </div>
-                ): 
-                ( <div className="flex flex-row items-center gap-6">
-                    <BotAvatar />
-                     <p className="text-lg text-gray-600 font-semibold">
-                  {message.content}
-                </p>
-                </div>
-                ) }
-                
-               
-              </div>
-            ))}
-                </div>
-                
+
+{/* conversation field */}
+<div className="space-y-4 mt-4">
+    {isLoading && (
+        <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+            ....loading This is icon for loading
+        </div>
+    )}
+    {messages.map((message)=>(
+        <div key={message.content}
+          className={cn("p-8 w-full flex items-start gap-x-8 rounded-lg bg-green-200", message.role === "user" ? "bg-white border border-black/10" : "bg-green-200")}
+        >
+            {message.role === "user"? <UserAvatar /> : <BotAvatar />}
+
+<p className="text-xl font-medium"> {message.content}</p>
+        </div>
+    ))}
+</div>
+
             </div>
+           
         </div>
     )
 }
@@ -164,3 +185,4 @@ const messageDemo = [
 
     }
 ]
+

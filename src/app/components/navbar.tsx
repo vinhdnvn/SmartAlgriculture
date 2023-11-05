@@ -4,6 +4,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment, forwardRef, useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 import { User } from 'lucide-react'
 import { link } from 'fs';
@@ -18,6 +19,7 @@ const links = [
 
 
 const Navbar = () => {
+    const {data: session} = useSession();
     return (
         <div className="flex flex-row   justify-between items-center p-4">
             <div>
@@ -41,6 +43,10 @@ const Navbar = () => {
 
                 <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" >
                    <div className='px-3 py-3'> 
+                 {session?.user?.name && ( 
+                     <div className=' ml-2 text-xl font-medium'>Hello {session?.user?.name} !</div>
+
+                 )}
                    {links.map((link)=>(
                         <Menu.Item key={link.href} as={Fragment} >
                             {({active})=>(

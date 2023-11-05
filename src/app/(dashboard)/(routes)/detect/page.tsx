@@ -3,10 +3,24 @@ import Button from "@/app/components/Button";
 import { useState } from "react";
 import { CldImage, CldUploadButton } from 'next-cloudinary';
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import Custom404 from "../../error";
 
 
 
 const DetectPage = () => {
+
+    const { status } = useSession({
+        required: true,
+        onUnauthenticated() {
+            return {
+                redirect: {
+                    destination: '/#',
+                    permanent: false,
+                },
+            }
+        },
+    });
 
     const handleUpload = (result: any) => {
         setFiles(result.info.secure_url)
@@ -18,6 +32,7 @@ const DetectPage = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [files, setFiles] = useState(null);
+    if (status === 'loading') return <Custom404/>
     return (
         < >
         
