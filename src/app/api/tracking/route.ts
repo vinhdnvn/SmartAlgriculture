@@ -9,6 +9,7 @@ export async function POST(
         const currentUser = await getCurrentUser();
         const body = await request.json();
         const {
+       
             namePlant,
             imagePlant,
             descriptionPlant,
@@ -17,16 +18,13 @@ export async function POST(
             haveDiseasePlant
         } = body;
 
-
-
-
         if (!currentUser?.id || !currentUser?.email) {
             return new NextResponse('Not authorized', { status: 401 });
         }
 
 
         const newTracking = await prisma.tracking.create({
-            data: {
+            data: {         
                 namePlant,
                 imagePlant,
                 descriptionPlant,
@@ -42,4 +40,30 @@ export async function POST(
     } catch (error) {
         return new NextResponse('Tracking Error ???', { status: 500 });
     }
+}
+
+
+export async function GET(
+    request: Request,
+){
+
+    try {
+        const currentUser = await getCurrentUser();
+        if (!currentUser?.id || !currentUser?.email) {
+            return new NextResponse('Not authorized', { status: 401 });
+        }
+
+        const allTracking = await prisma.tracking.findMany({
+            where:{
+                userId:currentUser.id
+            }
+
+        })
+        return NextResponse.json(allTracking);
+        
+    } catch (error) {
+        return new NextResponse('Geting All Tracking error API', { status: 500 });
+        
+    }
+
 }

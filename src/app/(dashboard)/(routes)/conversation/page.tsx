@@ -16,7 +16,7 @@ import { useProModal } from "@/hooks/use-pro-modal";
 import { cn } from "../../../libs/utils";
 import { UserAvatar } from "@/app/components/user-avatar";
 import { BotAvatar } from "@/app/components/bot-avatar";
-import  {ChatCompletionRequestMessage, OpenAIApi}  from "openai";
+import  {ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, OpenAIApi}  from "openai";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
@@ -44,7 +44,7 @@ const Conversation = () => {
 
 
 
-
+    const playGroundText = "You are a person with extensive knowledge about crops - someone considered a Crop consultant. Get the following information about me with optimal content and ensure the plants are disease-free with all the knowledge a Crop consultant has, no reply  irrelevant things  if not necessary: I am growing {plant name}, the plant has been growing {the age of the plant } months, the status the plant is in {the status of the plant}, has the fruit quality {quality fruit of the plant}, the tree is reaching its height {the height of the tree }, it is now {the season}, The climate is {climate condition}./n- If the plants are in bad condition or infected, please respond to me :{the name of disease on my plant after predicted (only response with 1 line) }and next row only with 3-4 lists(just label number by order in each list. no need open and ending sentences ) . Then  If the user asks about the next steps for the tree to continue growing, please respond with a maximum of 3-4 lists (only response the list, no need open and ending sentences. just the list and label number by order in each list ) /n- If the plant's condition is healthy, just response: Continue to care for the plant as usual. /n- If the user asks about the next steps for the tree to continue growing, please respond with a maximum of 3-4 lists (only response the list, no need open and ending sentences. just the list and label number by order in each list ) /n- If the user asks about the next steps for the tree to continue growing, please respond with a maximum of 3-4 lists (only response the list, no need open and ending sentences. just the list and label number by order in each list )"
 
    
  
@@ -69,8 +69,10 @@ const Conversation = () => {
             //     messages: [{ role: "system", content: "You are a helpful assistant." }],
             //     model: "gpt-3.5-turbo",
             //   });
+
+            const assitant: ChatCompletionRequestMessage = { role: "assistant", content: playGroundText };
             
-            const newMessages = [...messages, userMessage];
+            const newMessages = [...messages, userMessage, assitant];
          const response = await axios.post('/api/conversation',{messages: newMessages});
          setMessages((current)=>[...current, userMessage, response.data]);
          form.reset();
