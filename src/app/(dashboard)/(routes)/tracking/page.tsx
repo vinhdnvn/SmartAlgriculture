@@ -14,33 +14,13 @@ import { CldUploadButton } from "next-cloudinary";
 import Button from "@/app/components/Button";
 import { useSession } from "next-auth/react";
 import useUser from '@/hooks/useUser';
-import getCurrentUser from "@/app/actions/getCurrentUser";
+import { useRouter } from "next/navigation";
+import { routes } from "../../../../../constants";
 
 
-// visualize for me the data of tracking include title ,status,date,duration
-const trackings = [
-  {
-    "title": "Plant 1",
-    "namePlants": "Tomato",
-    "status": "Healthy",
-    "date": "12/12/2021",
-    "duration": "2 weeks"
-  },
-  {
-    "title": "Plant 2",
-    "namePlants": "Tomato",
-    "status": "Healthy",
-    "date": "12/12/2021",
-    "duration": "2 weeks"
-  },
-  {
-    "title": "Plant 3",
-    "namePlants": "Tomato",
-    "status": "Healthy",
-    "date": "12/12/2021",
-    "duration": "2 weeks"
-  }
-]
+
+// visualize for me the data of tracking include title ,status,datePlant,duration
+
 
 
 const TrackingPage = () => {
@@ -52,16 +32,40 @@ const TrackingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [haveDiseasePlant, setHaveDiseasePlant] = useState(false);
   const [imagePlant, setImagePlant] = useState<string>('');
-  const [date, setDate] = useState('' as any);
+  const [datePlant, setdatePlantPlant] = useState('' as any);
   const {data:session} = useSession();
   const {userId} = useUser();
-  const handleDeactive = (data: any) => {
+  const routes = useRouter();
 
-    // console log namePlant
-    // console.log(plantName)
+  const [trackings, setTrackings] = useState<[]>([]);
+  useEffect(()=>{
+    async function fetchTrackings(){
+      try {
+        const response = await axios.get('/api/tracking');
+        setTrackings(response.data);
+      } catch (error) {
+        console.log('Error in fetching all trackings');
+      }
+      }
+
+      
+   fetchTrackings();
+  },[])
+
+  const pushToPlant = () =>{
+    // routes.push($`/plant/${userId}`)
+
   }
 
-  // const currentUser = getCurrentUser(userId);
+  
+
+   
+
+  const handleDeactive = (data: any) => {
+  
+  }
+
+
 
 
   const {
@@ -72,7 +76,7 @@ const TrackingPage = () => {
     }
   } = useForm<FieldValues>({
     defaultValues: {
-      // date:'',
+      datePlant:'',
       namePlant: '',
       descriptionPlant: '',
       statusPlant: '',
@@ -124,6 +128,9 @@ const TrackingPage = () => {
  
 
 
+ 
+
+
   return (
     <div className="flex flex-col  justify-center  items-center">
 
@@ -169,10 +176,10 @@ const TrackingPage = () => {
                   <div className="flex flex-row gap-10 px-9 items-center">
                     <div className="flex flex-col gap-4">
 
-                      <div className="flex flex-row gap-6 items-center">
-                        <label className="text-xl"> Date:  </label>
-                        <input className="hover:cursor-pointer" type="date" id="plantDate" onChange={(e)=> setDate(e.target.value)}></input>
-                      </div>
+                      {/* <div className="flex flex-row gap-6 items-center">
+                        <label className="text-xl"> datePlant:  </label>
+                        <input className="hover:cursor-pointer" {...register('datePlant', { required: true })} type="date" id="datePlant" onChange={(e)=> setdatePlantPlant(e.target.value)}></input>
+                      </div> */}
                       <label>
 
                         <input type="text" id="namePlant" placeholder="Name of plant" className="w-full  border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-300" {...register('namePlant', { required: true })}
@@ -299,37 +306,38 @@ const TrackingPage = () => {
         </div>
         <div className="w-[20%] flex flex-row items-center  text-xl text-gray-400 ">
           <div className="flex flex-row justify-start items-center">
-            <h1 >Project</h1>
+            <h1 >Date</h1>
             <ChevronDown />
           </div>
         </div>
         <div className="w-[20%] flex flex-row items-center  text-xl text-gray-400 ">
           <div className="flex flex-row justify-start items-center">
-            <h1 >Date</h1>
+            <h1 >Status</h1>
             <ChevronDown />
           </div>
         </div>
         <div className=" flex flex-row items-center  text-xl text-gray-400 ">
           <div className="flex flex-row justify-start items-center">
-            <h1 >Status</h1>
+            <h1 >On Diseased</h1>
             <ChevronDown />
           </div>
         </div>
       </div>
 
-      {trackings.map((tracking) => {
+     {
+      trackings.map((tracking:any)=>{
         return (
-          <div className="w-[90%] cursor-pointer hover:bg-slate-100  px-5 py-6 flex flex-row">
+          <div key={tracking.id} onClick={pushToPlant} className="w-[90%] cursor-pointer hover:bg-slate-100  px-5 py-6 flex flex-row">
 
             <div className="w-[40%]  flex flex-row items-center  text-xl text-gray-400 ">
               <div className="flex gap-8 flex-row justify-start items-center">
-                <div className="p-9 rounded-full bg-orange-300">
+                <div className=" rounded-full bg-orange-300">
                   {/* this is image include the div */}
-                  <Image className="rounded-full " src="/plantTracking.jpg" alt="this is example" width={40} height={40} />
+                  <Image className="rounded-full " src={tracking.imagePlant} alt="this is example" width={120} height={120} />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-black" >{tracking.title}  </h1>
-                  <h2 className="text-lg font-medium text-gray-400">{tracking.namePlants}</h2>
+                  <h1 className="text-xl font-bold text-black" >{tracking.namePlant}  </h1>
+                  <h2 className="text-lg font-medium text-gray-400">{}</h2>
 
                 </div>
                 {/* <ChevronDown/> */}
@@ -337,25 +345,35 @@ const TrackingPage = () => {
             </div>
             <div className="w-[20%] flex flex-row items-center  text-xl text-gray-400 ">
               <div className="flex flex-row justify-start items-center">
-                <h1 >0:14:54</h1>
+                <h1 >
+                {new Intl.DateTimeFormat('vi-VN', {
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric',
+              timeZone: 'Asia/Ho_Chi_Minh',
+            }).format(new Date(tracking.createdAt))}
+                   </h1>
                 {/* <ChevronDown/> */}
               </div>
             </div>
             <div className="w-[20%] flex flex-row items-center  text-xl text-gray-400 ">
               <div className="flex flex-row justify-start items-center">
-                <h1 >{tracking.date}</h1>
+                <h1 >{tracking.statusPlant}</h1>
                 {/* <ChevronDown/> */}
               </div>
             </div>
             <div className=" flex flex-row items-center  text-xl text-gray-400 ">
               <div className="flex flex-row justify-start items-center">
-                <h1 >{tracking.status}</h1>
+                <h1 >
+                  {tracking.haveDiseasePlant ? 'Yes' : 'No'}
+                </h1>
                 {/* <ChevronDown/> */}
               </div>
             </div>
           </div>
         )
-      })}
+      })
+     }
 
 
 

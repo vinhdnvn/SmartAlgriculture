@@ -34,6 +34,7 @@ model Tracking {
   id               String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt        DateTime @default(now())
   // =======PLant =====
+ 
   namePlant        String
   imagePlant       String
   descriptionPlant String
