@@ -3,12 +3,13 @@ import headerNavLinks from "../../data/headerNavLinks"
 import siteMetadata from "../../data/siteMetadata"
 import Logo from "../../public/logo.png"
 import { Transition } from "@headlessui/react"
-
+import { useRouter } from "next/navigation"
 import { HomeIcon, UserIcon } from '@heroicons/react/24/outline'
 import {useState} from 'react'
 
 export default function HeaderGlobal() {
   const [isShowing, setIsShowing] = useState(false);
+  const router = useRouter();
     return (
        <header className="flex justify-around py-3 mx-40">
                {/* for logo */}
@@ -30,7 +31,9 @@ export default function HeaderGlobal() {
           <a className="text-2xl font-medium hover:cursor-pointer hover:text-[#00D023] transition hover:scale-110">Our teams</a>
           <a className="text-2xl font-medium hover:cursor-pointer hover:text-[#00D023] transition hover:scale-110">Blog</a>
           <a className="text-2xl font-medium hover:cursor-pointer hover:text-[#00D023] transition hover:scale-110">Your diary</a>
-          <a className="text-2xl font-medium hover:cursor-pointer hover:text-[#00D023] transition hover:scale-110 flex flex-row items-center justify-center gap-3">
+          <a onClick={()=>{
+            router.push("/authen")
+          }} className="text-2xl font-medium hover:cursor-pointer hover:text-[#00D023] transition hover:scale-110 flex flex-row items-center justify-center gap-3">
             Log in 
           <UserIcon className="md:h-8 md:w-8  " />
           </a>

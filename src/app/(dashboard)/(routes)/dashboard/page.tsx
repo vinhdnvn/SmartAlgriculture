@@ -4,10 +4,15 @@ import { useRouter } from "next/navigation";
 import { tools,routes } from "../../../../../constants";
 import {cn } from "../../../libs/utils";   
 import {Card } from "../../../components/ui/card";
+import { useSession } from "next-auth/react";
 
 
 const DashboardPage = () => {
     const router = useRouter();
+    const {data:session} = useSession();
+    if (!session) {
+    router.replace('authen');
+    }
     return(
         <div>
         <div className="mb-8 space-y-4">
