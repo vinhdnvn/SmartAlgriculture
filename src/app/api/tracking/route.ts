@@ -9,7 +9,6 @@ export async function POST(
         const currentUser = await getCurrentUser();
         const body = await request.json();
         const {
-       
             namePlant,
             imagePlant,
             descriptionPlant,
@@ -67,3 +66,5 @@ export async function GET(
     }
 
 }
+
+// create function getTrackingById

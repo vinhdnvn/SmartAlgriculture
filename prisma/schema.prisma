@@ -48,20 +48,7 @@ model Tracking {
   userId           String   @db.ObjectId
 }
 
-// model Plant {
-//   id String @id @default(auto()) @map("_id") @db.ObjectId
-//   name String
-//   image String?
-//   description String?
-//   status String?
-//   quality String?
-//   haveDisease Boolean @default(false)
-//   createdAt DateTime @default(now())
 
-//   trackingId String @db.ObjectId  
-//   tracking Tracking @relation(fields: [trackingId], references: [id])
-
-// }
 
 model Task {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId

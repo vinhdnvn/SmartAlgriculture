@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Configuration, OpenAIApi } from "openai";
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { systemMessage } from "@/app/libs/openai/chatConfig";
 
 
 
@@ -27,7 +28,9 @@ export async function POST(
 
         const response = await openai.createChatCompletion({
             model:"gpt-3.5-turbo",
-            messages
+            
+            messages : [...messages, systemMessage]
+            
         })
 
         return NextResponse.json(response.data.choices[0].message)
