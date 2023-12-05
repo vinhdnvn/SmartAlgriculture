@@ -15,11 +15,7 @@ export default async function getTrackingById(trackingId : string) {
 
         if (tracking) {
             console.log('Tracking found')
-            return {
-                ...tracking,
-                createAt: tracking.createdAt.toString(),
-
-            }
+            return tracking 
         }
 
         

@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "../../../libs/utils";
 import { UserAvatar } from "@/app/components/user-avatar";
 import { BotAvatar } from "@/app/components/bot-avatar";
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, OpenAIApi } from "openai";
+import { ChatCompletionRequestMessage, ChatCompletionResponseMessage, OpenAIApi } from "openai";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
@@ -28,12 +28,6 @@ import { systemMessage, userMessage } from "@/app/libs/openai/chatConfig";
 
 
 
-
-// vissualize the messages array data for me, data take from openai
-// interface ChatCompletionRequestMessage {
-//     content: string;
-//     role: "user" | "bot";
-// }
 
 
 
@@ -63,31 +57,23 @@ const Conversation = () => {
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        // console.log(values);
         try {
-            const userMessage: ChatCompletionRequestMessage = { role: "user", content: values.prompt };
-            // const completion = await openai.chat.completions.create({
-            //     messages: [{ role: "system", content: "You are a helpful assistant." }],
-            //     model: "gpt-3.5-turbo",
-            //   });
-
-
-
-            const newMessages = [...messages, userMessage];
-            const response = await axios.post('/api/conversation', { messages: newMessages });
-            setMessages((current) => [...current, userMessage, response.data]);
-            form.reset();
+          const userMessage: ChatCompletionRequestMessage = { role: "user", content: values.prompt };
+          const systemMessagefromBot  = systemMessage;
+          const newMessages = [...messages, userMessage, systemMessagefromBot];
+          
+          const response = await axios.post('/api/conversation', { messages: newMessages });
+          setMessages((current) => [...current, userMessage, response.data]);
+          
+          form.reset();
         } catch (error: any) {
-            if (error?.response?.status === 403) {
-                toast.error("You are not authorized to perform this action.");
-            } else {
-                toast.error("Something went wrong.");
-            }
+            console.log('loi tu client');
+            toast.error("Something went wrong.");
+          
+        } finally {
+          router.refresh();
         }
-        finally {
-            router.refresh();
-        }
-    }
+      }
 
     if (!session) {
         router.replace("/authen");
@@ -162,30 +148,4 @@ const Conversation = () => {
 }
 
 export default Conversation;
-
-
-const messageDemo = [
-    {
-        "content": "Hello, how are you?",
-        "role": "user"
-    },
-    {
-        "content": "I am doing great, What can i help you?",
-        "role": "bot"
-
-    },
-    {
-        "content": "So i have problem with my blossom ",
-        "role": "user"
-    }, {
-        "content": "What is the problem?",
-        "role": "bot"
-
-    },
-    {
-        "content": "My blossom's leaf have a lot of brown spot",
-        "role": "user"
-
-    }
-]
 
