@@ -4,6 +4,7 @@ import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { systemMessage } from "@/app/libs/openai/chatConfig";
 
+import { evaluatePlant } from "@/app/libs/openai/evaluate";
 
 
 const configuration = new Configuration({
@@ -16,6 +17,8 @@ export async function POST(
     req: Request
 ) {
     try {
+        // const systemMessageBot = systemMessage;
+    
         const body = await req.json();
         const { messages } = body;
         if (!configuration.apiKey) {
@@ -28,8 +31,8 @@ export async function POST(
 
         const response = await openai.createChatCompletion({
             model:"gpt-3.5-turbo",
-            
-            messages : [...messages, systemMessage]
+            messages,
+           
             
         })
 
