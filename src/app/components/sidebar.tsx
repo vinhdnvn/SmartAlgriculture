@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Montserrat } from "next/font/google"
-import { ScanSearch, Sprout, LayoutDashboard, MessageSquare, Database, Settings, VideoIcon, ChevronDown, ListChecks, ScrollText, LogOut } from "lucide-react";
+import { ScanSearch, Sprout, Plus, MessageSquare, Database, Settings, VideoIcon, ChevronDown, ListChecks, ScrollText, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation"
 
 
@@ -14,20 +14,20 @@ const poppins = Montserrat({ weight: '600', subsets: ['latin'] });
 
 const routes = [
   {
-    label: 'Chatbot',
+    label: 'EcoBots',
     icon: MessageSquare,
     href: '/conversation',
     color: "text-sky-500"
   },
+  // {
+  //   label: 'Tasks',
+  //   icon: ListChecks,
+  //   href: '/',
+  //   color: "text-violet-500",
+  // },
   {
-    label: 'Tasks',
-    icon: ListChecks,
-    href: '/',
-    color: "text-violet-500",
-  },
-  {
-    label: 'Diary',
-    icon: ScrollText,
+    label: 'Comming soon ....',
+    icon: Plus,
     color: "text-pink-700",
     href: '/diary',
   },
@@ -37,23 +37,7 @@ const routes = [
     color: "text-orange-700",
     href: '/home',
   },
-  // {
-  //   label: 'Music Generation',
-  //   icon: Music,
-  //   color: "text-emerald-500",
-  //   href: '/music',
-  // },
-  // {
-  //   label: 'Code Generation',
-  //   icon: Code,
-  //   color: "text-green-700",
-  //   href: '/code',
-  // },
-  // {
-  //   label: 'Settings',
-  //   icon: Settings,
-  //   href: '/settings',
-  // },
+ 
 ]
 const routesPlants = [
   {

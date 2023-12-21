@@ -10,6 +10,7 @@ import { Dialog, Transition } from "@headlessui/react"
 import { Fragment } from 'react'
 import { IoClose } from "react-icons/io5"
 import Link from "next/link"
+import Form from "./Form"
 
 interface TrackingListProps {
     createdAt: Date
@@ -225,62 +226,12 @@ const TrackingList: React.FC<TrackingListProps> = (
                                 </button>
 
                             </div>
-                            (
-                            <div className="flex flex-row justify-between gap-10 items-center">
-                                <div className="flex flex-col gap-10">
-                                    <Image width={360} height={280} className="rounded-2xl" src={imagePlant} alt="img" />
-                                    <div className="flex justify-center items-center bg-green-400 rounded-xl px-9 py-3 text-xl text-white font-bold">{namePlant}</div>
-                                </div>
-                                <div className="flex flex-col justify-center items-start gap-8">
-                                    <div className="flex flex-row items-center gap-3">
-                                        <Image width={30} height={30} src="/iconsPlant/calenderIcon.png" alt="calender" />
-                                        <a className="font-bold text-2xl">Ngày trồng: </a>
-                                        <a className=" text-2xl">
-                                            {
-                                                new Intl.DateTimeFormat('vi-VN', {
-                                                    day: '2-digit',
-                                                    month: '2-digit',
-                                                    year: 'numeric',
-                                                    timeZone: 'Asia/Ho_Chi_Minh'
-                                                }).format(new Date(createdAt))
-                                            }
-
-                                        </a>
-                                    </div>
-                                    <div className="flex flex-col justify-start items-start gap-3">
-                                        <div className="flex flex-row">
-                                            <Image width={30} height={30} className="mr-3" src="/iconsPlant/featureIcon.png" alt="calender" />
-                                            <a className="font-bold text-2xl">Đặc điểm</a>
-                                        </div>
-
-                                        <a className="ml-8 text-2xl">Cao : 1m4 <br /> Loại lá : Lá đơn <br /> Thời gian trồng phù hợp: Mùa thu</a>
-                                    </div>
-                                    <div className="flex flex-row items-center gap-3">
-                                        <Image width={30} height={30} src="/iconsPlant/leafIcon.png" alt="calender" />
-                                        <a className="font-bold text-2xl">Tình trạng: </a>
-                                        <a className=" text-2xl">{statusPlant}</a>
-                                    </div>
-                                    <div className="flex flex-row items-center gap-3">
-                                        <Image width={30} height={30} src="/iconsPlant/appleIcon.png" alt="calender" />
-                                        <a className="font-bold text-2xl">Chất lượng quả: </a>
-                                        <a className=" text-2xl">{qualityPlant}</a>
-                                    </div>
-                                    <div className="flex flex-col justify-start items-start gap-3">
-                                        <div className="flex flex-row">
-                                            <Image width={30} height={30} className="mr-3" src="/iconsPlant/featureIcon.png" alt="calender" />
-                                            <a className="font-bold text-2xl"> Yêu cầu chăm sóc </a>
-                                        </div>
-
-                                        <a className="ml-8 text-2xl">Tiếp tục kế hoạch bón phân tưới nước như thường ngày</a>
-                                    </div>
-                                    <Link key="id" href="/conversation" className="bg-orange-300 rounded-xl px-14 text-xl font-medium cursor-pointer transition duration-150 hover:bg-green-300 py-4 flex items-center justify-center ">Trợ giúp cây trồng</Link>
-
-                                </div>
-                            </div>
+                            <p className="font-bold p-6">Vui lòng chọn ảnh cây trồng của bạn để chúng tôi có dự đoán tình trạng cây !</p>
+                           <Form />
 
 
 
-                            )
+                            
                         </Dialog.Panel>
 
                     </Transition.Child>

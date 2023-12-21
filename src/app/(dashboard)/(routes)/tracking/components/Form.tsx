@@ -30,6 +30,9 @@ function Form() {
       if(result !== 'Apple___healthy') {
         setIsHealthy(false); 
       }
+      else{
+        setIsHealthy(true);
+      }
       setTimeout(() => {
         setLoading(false);
       }, 1500); // sau 2 giây mới tắt loading
@@ -48,7 +51,7 @@ function Form() {
 // }, [!isHealthy])
 
   return (
-    <div className='flex flex-row justify-center items-center gap-4'>
+    <div className='flex flex-row justify-center items-center gap-3'>
      <div className='flex flex-col items-center justify-center gap-6'>
      {imagePreview && (
         <img width={400} src={imagePreview} alt="preview" />  
@@ -59,7 +62,7 @@ function Form() {
       </div>
      </div>
       
-      <div className={cn("flex ml-[300px] flex-col justify-center items-center gap-8  rounded-2xl py-28 px-40", isHealthy ? 'bg-green-400' : 'bg-red-500')}>
+      <div className={cn("flex flex-col justify-center items-center gap-8  rounded-2xl py-32 px-40", isHealthy ? 'bg-green-400' : 'bg-red-500')}>
                     <a className="text-3xl font-semibold">
                         Result
                     </a>
@@ -74,7 +77,8 @@ function Form() {
                     {result && !loading && <p className='text-xl font-medium'> {result}</p>}
                     </a>
                     <a className="">
-                    { !isHealthy && <p className='text-2xl  font-medium'> Your plant have diseased !!!</p>}
+                    { !isHealthy ? ( <p className=' font-medium'> Your plant have diseased !!!</p>) : ( <p className=' font-medium'> Your plant is healthy !!!</p>)}
+                   
                     </a>
                 </div>
      
